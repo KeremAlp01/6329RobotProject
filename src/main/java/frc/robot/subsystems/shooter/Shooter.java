@@ -4,9 +4,8 @@
 
 package frc.robot.subsystems.shooter;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
   private final ShooterIO io;
@@ -15,13 +14,12 @@ public class Shooter extends SubsystemBase {
   /** Creates a new ShooterSubsystem. */
   public Shooter(ShooterIO io) {
     this.io = io;
+  }
 
+  public void setVoltage(double rightVoltage, double leftVoltage) {
+    io.setVoltage(rightVoltage, leftVoltage);
   }
-  
-  public void setShooterVoltage(double rightVoltage,double leftVoltage){
-    io.setShooterVoltage(rightVoltage, leftVoltage);
-  }
-  
+
   @Override
   public void periodic() {
     io.updateInputs(inputs);

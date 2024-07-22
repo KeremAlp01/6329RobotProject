@@ -4,33 +4,30 @@
 
 package frc.robot.subsystems.arm;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmSubsystem extends SubsystemBase {
   private final ArmIO io;
   private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
   /** Creates a new armSubsystem. */
-
   public enum armState {
     HOME,
     AMPPOSE,
     SPEAKER
   }
-  
+
   public ArmSubsystem(ArmIO io) {
     this.io = io;
   }
 
-  public void stopArm(){
+  public void stopArm() {
     io.stopArm();
   }
 
-  public void setArmVolts(double voltage){
-    io.setArmVolts(voltage);
+  public void setVoltage(double voltage) {
+    io.setVoltage(voltage);
   }
-
 
   @Override
   public void periodic() {

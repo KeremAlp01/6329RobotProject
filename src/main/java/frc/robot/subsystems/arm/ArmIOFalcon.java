@@ -13,74 +13,70 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 /** Add your docs here. */
-public class ArmIOFalcon implements ArmIO{
-    //Motor
-    private final TalonFX armMotor = new TalonFX(22, "Canbus");
+public class ArmIOFalcon implements ArmIO {
+  // Motor
+  private final TalonFX armMotor = new TalonFX(22, "Canbus");
 
-    //Status signals
-    private final StatusSignal<Double> armAngle = armMotor.getPosition();
-    private final StatusSignal<Double> armVolts = armMotor.getMotorVoltage();
+  // Status signals
+  private final StatusSignal<Double> armAngle = armMotor.getPosition();
+  private final StatusSignal<Double> armVolts = armMotor.getMotorVoltage();
 
+  public ArmIOFalcon() {
+    configArmTalonFX(armMotor);
+    BaseStatusSignal.setUpdateFrequencyForAll(50.0, armAngle, armVolts);
+  }
 
+  public void configArmTalonFX(TalonFX talon) {
 
-    public ArmIOFalcon(){
-     configArmTalonFX(armMotor);
-      BaseStatusSignal.setUpdateFrequencyForAll(50.0, armAngle,armVolts);
-    }
+    talon.getConfigurator().apply(new TalonFXConfiguration());
+    TalonFXConfiguration config = new TalonFXConfiguration();
 
+    config.Slot0.kP = 0;
+    config.Slot0.kI = 0;
+    config.Slot0.kD = 0;
 
-    public void configArmTalonFX(TalonFX talon){
+    config.Slot0.kS = 0;
+    config.Slot0.kV = 0;
+    config.Slot0.kA = 0;
 
-        talon.getConfigurator().apply(new TalonFXConfiguration());
-        TalonFXConfiguration config = new TalonFXConfiguration(); 
+    config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    config.Feedback.FeedbackRotorOffset = 0.0;
+    config.Feedback.RotorToSensorRatio = 1.0;
+    config.Feedback.SensorToMechanismRatio = 1.0;
 
-        config.Slot0.kP = 0;
-        config.Slot0.kI = 0;
-        config.Slot0.kD = 0;
+    config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        config.Slot0.kS = 0;
-        config.Slot0.kV = 0;
-        config.Slot0.kA = 0;
+    config.CurrentLimits.SupplyCurrentLimit = 40;
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-        config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-        config.Feedback.FeedbackRotorOffset = 0.0;
-        config.Feedback.RotorToSensorRatio = 1.0;
-        config.Feedback.SensorToMechanismRatio = 1.0;
+    config.MotionMagic.MotionMagicCruiseVelocity = 0;
+    config.MotionMagic.MotionMagicAcceleration = 0;
 
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
-        config.CurrentLimits.SupplyCurrentLimit = 40;
-        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0;
+    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = 0;
-        config.MotionMagic.MotionMagicAcceleration = 0;
+    config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0;
+    config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0;
+  }
 
-        config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-        config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+  @Override
+  public void updateInputs(ArmIOInputs inputs) {
+    BaseStatusSignal.refreshAll(armAngle, armVolts);
+    inputs.armVolts = armMotor.getMotorVoltage().getValueAsDouble();
+    inputs.armAngle = armMotor.getPosition().getValueAsDouble();
+  }
 
-        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0;
-        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+  @Override
+  public void setVoltage(double votlage) {
+    armMotor.setVoltage(votlage);
+  }
 
-        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0;
-        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0;
-
-    }
-
-    @Override
-    public void updateInputs(ArmIOInputs inputs){
-        BaseStatusSignal.refreshAll(armAngle,armVolts);
-        inputs.armVolts = armMotor.getMotorVoltage().getValueAsDouble();
-        inputs.armAngle = armMotor.getPosition().getValueAsDouble();
-    }
-
-    @Override
-    public void setArmVolts(double votlage){
-        armMotor.setVoltage(votlage);
-    }
-
-    @Override
-    public void stopArm(){
-        armMotor.stopMotor();
-    }
+  @Override
+  public void stopArm() {
+    armMotor.stopMotor();
+  }
 }

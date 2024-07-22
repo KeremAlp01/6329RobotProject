@@ -8,19 +8,17 @@ import org.littletonrobotics.junction.AutoLog;
 
 /** Add your docs here. */
 public interface ShooterIO {
-    @AutoLog
-    public static class ShooterIOInputs{
-        public double rightVoltage;
-        public double leftVoltage;
-        public double leftRPM;
-        public double rightRPM;
-  
-    }
+  @AutoLog
+  public static class ShooterIOInputs {
+    public double rightVoltage;
+    public double leftVoltage;
+    public double leftRPM;
+    public double rightRPM;
+  }
 
-    public default void setShooterVoltage(double rightVotlage,double leftVoltage){}
+  public default void setVoltage(double rightVotlage, double leftVoltage) {}
 
-    public default void setTargetRPM(double leftRPM,double rightRPM){}
+  public default void setTargetRPM(double leftRPM, double rightRPM) {}
 
-    public default void updateInputs(ShooterIOInputs inputs){}
-    
-} 
+  public default void updateInputs(ShooterIOInputs inputs) {}
+}

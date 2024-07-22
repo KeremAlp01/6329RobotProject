@@ -4,28 +4,25 @@
 
 package frc.robot.subsystems.intake;
 
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class IntakeSubsystem extends SubsystemBase {
   private final IntakeIO io;
   private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
   /** Creates a new IntakeSubsystem. */
-
   public enum IntakeState {
     IDLE,
     INTAKE,
     OUTTAKE
   }
-  
+
   public IntakeSubsystem(IntakeIO io) {
     this.io = io;
   }
-  
-  public void setIntakeVolts(double voltage){
-    io.setIntakeVolts(voltage);
+
+  public void setVoltage(double voltage) {
+    io.setVoltage(voltage);
   }
 
   @Override

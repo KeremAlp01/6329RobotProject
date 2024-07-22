@@ -28,16 +28,32 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Auto;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FlywheelCommand;
+import frc.robot.commands.OpenLoop.ArmOpenLoopCommand;
+import frc.robot.commands.OpenLoop.FeederOpenLoopCommand;
+import frc.robot.commands.OpenLoop.IntakeOpenLoopCommand;
+import frc.robot.commands.OpenLoop.ShooterOpenLoopCommand;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIOFalcon;
+import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.feeder.FeederIO;
+import frc.robot.subsystems.feeder.FeederIOFalcon;
+import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIO;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOTalonFX;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOFalcon;
+import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOKraken;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,6 +77,10 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Flywheel flywheel;
+  private final IntakeSubsystem intake;
+  private final Shooter shooter;
+  private final ArmSubsystem arm;
+  private final FeederSubsystem feeder;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -85,6 +105,11 @@ public class RobotContainer {
                 new ModuleIOTalonFX(2),
                 new ModuleIOTalonFX(3));
         flywheel = new Flywheel(new FlywheelIOTalonFX());
+        intake = new IntakeSubsystem(new IntakeIOFalcon());
+        shooter = new Shooter(new ShooterIOKraken());
+        arm = new ArmSubsystem(new ArmIOFalcon());
+        feeder = new FeederSubsystem(new FeederIOFalcon());
+
         break;
 
       case SIM:
@@ -97,6 +122,10 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim());
         flywheel = new Flywheel(new FlywheelIOSim());
+        intake = new IntakeSubsystem(new IntakeIOFalcon());
+        shooter = new Shooter(new ShooterIOKraken());
+        arm = new ArmSubsystem(new ArmIOFalcon());
+        feeder = new FeederSubsystem(new FeederIOFalcon());
         break;
 
       default:
@@ -109,6 +138,10 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
         flywheel = new Flywheel(new FlywheelIO() {});
+        intake = new IntakeSubsystem(new IntakeIO() {});
+        shooter = new Shooter(new ShooterIO() {});
+        arm = new ArmSubsystem(new ArmIO() {});
+        feeder = new FeederSubsystem(new FeederIO() {});
         break;
     }
 
@@ -141,17 +174,13 @@ public class RobotContainer {
             drive,
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> -controller.getRawAxis(4)));
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    controller
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
+    controller.b().whileTrue(new ShooterOpenLoopCommand(shooter, 4));
+    //controller.b().onTrue(Commands.runOnce(() ->drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),drive).ignoringDisable(true));
+    controller.x().whileTrue(new ArmOpenLoopCommand(arm, 4));
+    controller.y().whileTrue(new IntakeOpenLoopCommand(intake, 5));
+    controller.rightBumper().whileTrue(new FeederOpenLoopCommand(feeder, 6));
     controller
         .a()
         .whileTrue(

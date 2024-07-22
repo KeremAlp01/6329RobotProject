@@ -52,7 +52,7 @@ public class Drive extends SubsystemBase {
       Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
   private static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
 
-  ChoreoTrajectory trajectory = Choreo.getTrajectory("Trajectory");
+  ChoreoTrajectory trajectory = Choreo.getTrajectory("a");
 
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();

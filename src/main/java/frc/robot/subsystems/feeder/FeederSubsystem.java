@@ -4,23 +4,32 @@
 
 package frc.robot.subsystems.feeder;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class FeederSubsystem extends SubsystemBase {
   private final FeederIO io;
+  private final FeederIOInputsAutoLogged inputs = new FeederIOInputsAutoLogged();
   /** Creates a new feederSubsystem. */
-
   public enum feederState {
     IDLE,
     SPINNING
   }
-  
+
   public FeederSubsystem(FeederIO io) {
     this.io = io;
   }
 
+   public void setVoltage(double voltage){
+    io.setVoltage(voltage);
+   }
+
   @Override
   public void periodic() {
+    io.updateInputs(inputs);
+    Logger.processInputs("Feeder", inputs);
+
     // This method will be called once per scheduler run
   }
 }
