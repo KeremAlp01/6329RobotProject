@@ -11,7 +11,7 @@ public class FeederOpenLoopCommand extends Command {
   private final FeederSubsystem feeder;
   private final double voltage;
   /** Creates a new FeederOpenLoopCommand. */
-  public FeederOpenLoopCommand(FeederSubsystem feeder,double voltage) {
+  public FeederOpenLoopCommand(FeederSubsystem feeder, double voltage) {
     this.feeder = feeder;
     this.voltage = voltage;
     addRequirements(feeder);

@@ -2,19 +2,22 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.OpenLoop;
+package frc.robot.commands.CloseLoop;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.arm.ArmSubsystem;
 
-public class ShooterOpenLoopCommand extends Command {
-  private final Shooter shooter;
-  private final double voltage;
-  /** Creates a new ShooterOpenLoopCommand. */
-  public ShooterOpenLoopCommand(Shooter shooter, double voltage) {
-    this.shooter = shooter;
-    this.voltage = voltage;
-    addRequirements(shooter);
+public class setArmAngle2 extends Command {
+  private final ArmSubsystem arm;
+  private final double targetAngle;
+  private final double feedforward;
+
+  /** Creates a new setArmAngle. */
+  public setArmAngle2(ArmSubsystem arm, double targetAngle, double feedforward) {
+    this.arm = arm;
+    this.targetAngle = targetAngle;
+    this.feedforward = feedforward;
+    addRequirements(arm);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -25,13 +28,13 @@ public class ShooterOpenLoopCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setVoltage(voltage, voltage);
+    // arm.setArmAngle(targetAngle, feedforward);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setVoltage(0, 0);
+    arm.setVoltage(0);
   }
 
   // Returns true when the command should end.

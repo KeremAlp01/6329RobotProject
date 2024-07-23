@@ -4,9 +4,8 @@
 
 package frc.robot.subsystems.feeder;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class FeederSubsystem extends SubsystemBase {
   private final FeederIO io;
@@ -21,9 +20,9 @@ public class FeederSubsystem extends SubsystemBase {
     this.io = io;
   }
 
-   public void setVoltage(double voltage){
+  public void setVoltage(double voltage) {
     io.setVoltage(voltage);
-   }
+  }
 
   @Override
   public void periodic() {

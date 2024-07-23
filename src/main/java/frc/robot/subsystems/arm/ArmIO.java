@@ -6,15 +6,18 @@ import org.littletonrobotics.junction.AutoLog;
 
 /** Add your docs here. */
 public interface ArmIO {
+
   @AutoLog
   public static class ArmIOInputs {
-    public double armAngle = 0;
+    public double armPosition = 0;
     public double armVolts = 0;
   }
 
   public default void setVoltage(double voltage) {}
 
   public default void setArmAngle(double targetAngle) {}
+
+  public default void setArmAngle2(double targetAngle, double feedforward) {}
 
   public default void stopArm() {}
 

@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -26,6 +28,17 @@ public final class Constants {
   public static class AutoConstants {
     public static final double kPThetaController = 0;
     public static final double kPXController = 0;
+  }
+
+  public static class ArmConstants {
+    public static final double kGearRatio = 1;
+    public static final double kS = 0.1;
+    public static final double kA = 0.1;
+    public static final double kV = 0.1;
+    public static final double kG = 0.1;
+    public static final double velocitySetpoint = 0;
+    public static final ArmFeedforward ff =
+        new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
   }
 
   public static final Mode currentMode = Mode.SIM;

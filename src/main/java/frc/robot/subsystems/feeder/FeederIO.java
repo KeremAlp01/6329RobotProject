@@ -10,10 +10,9 @@ public interface FeederIO {
   public static class FeederIOInputs {
 
     public double feederVolts;
-
   }
 
   public default void setVoltage(double voltage) {}
 
-  public default void updateInputs(FeederIOInputs inputs){}
+  public default void updateInputs(FeederIOInputs inputs) {}
 }

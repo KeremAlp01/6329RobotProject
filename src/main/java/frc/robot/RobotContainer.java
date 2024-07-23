@@ -16,8 +16,6 @@ package frc.robot;
 import com.choreo.lib.Choreo;
 import com.choreo.lib.ChoreoTrajectory;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -26,8 +24,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Auto;
+import frc.robot.commands.CloseLoop.setArmAngle;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.FlywheelCommand;
 import frc.robot.commands.OpenLoop.ArmOpenLoopCommand;
 import frc.robot.commands.OpenLoop.FeederOpenLoopCommand;
 import frc.robot.commands.OpenLoop.IntakeOpenLoopCommand;
@@ -175,18 +173,16 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRawAxis(4)));
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    //controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     controller.b().whileTrue(new ShooterOpenLoopCommand(shooter, 4));
-    //controller.b().onTrue(Commands.runOnce(() ->drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),drive).ignoringDisable(true));
+    // controller.b().onTrue(Commands.runOnce(() ->drive.setPose(new
+    // Pose2d(drive.getPose().getTranslation(), new Rotation2d())),drive).ignoringDisable(true));
     controller.x().whileTrue(new ArmOpenLoopCommand(arm, 4));
     controller.y().whileTrue(new IntakeOpenLoopCommand(intake, 5));
     controller.rightBumper().whileTrue(new FeederOpenLoopCommand(feeder, 6));
-    controller
-        .a()
-        .whileTrue(
-            Commands.startEnd(
-                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel));
-    controller.a().whileTrue(new FlywheelCommand(() -> flywheelSpeedInput.get(), flywheel));
+    controller.x().whileTrue(new setArmAngle(arm, 100));
+    // controller.a().whileTrue(new FlywheelCommand(() -> flywheelSpeedInput.get(), flywheel));
+
   }
 
   /**
