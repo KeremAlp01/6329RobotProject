@@ -32,6 +32,7 @@ import frc.robot.commands.OpenLoop.IntakeOpenLoopCommand;
 import frc.robot.commands.OpenLoop.ShooterOpenLoopCommand;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOFalcon;
+import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -122,7 +123,7 @@ public class RobotContainer {
         flywheel = new Flywheel(new FlywheelIOSim());
         intake = new IntakeSubsystem(new IntakeIOFalcon());
         shooter = new Shooter(new ShooterIOKraken());
-        arm = new ArmSubsystem(new ArmIOFalcon());
+        arm = new ArmSubsystem(new ArmIOSim());
         feeder = new FeederSubsystem(new FeederIOFalcon());
         break;
 
@@ -173,14 +174,14 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRawAxis(4)));
-    //controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     controller.b().whileTrue(new ShooterOpenLoopCommand(shooter, 4));
     // controller.b().onTrue(Commands.runOnce(() ->drive.setPose(new
     // Pose2d(drive.getPose().getTranslation(), new Rotation2d())),drive).ignoringDisable(true));
     controller.x().whileTrue(new ArmOpenLoopCommand(arm, 4));
     controller.y().whileTrue(new IntakeOpenLoopCommand(intake, 5));
     controller.rightBumper().whileTrue(new FeederOpenLoopCommand(feeder, 6));
-    controller.x().whileTrue(new setArmAngle(arm, 100));
+    controller.leftBumper().onTrue(new setArmAngle(arm, 100));
     // controller.a().whileTrue(new FlywheelCommand(() -> flywheelSpeedInput.get(), flywheel));
 
   }

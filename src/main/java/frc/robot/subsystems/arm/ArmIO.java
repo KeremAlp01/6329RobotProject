@@ -17,7 +17,7 @@ public interface ArmIO {
 
   public default void setArmAngle(double targetAngle) {}
 
-  public default void setArmAngle2(double targetAngle, double feedforward) {}
+  public default void setArmAngle2(double targetAngle2, double feedforward) {}
 
   public default void stopArm() {}
 

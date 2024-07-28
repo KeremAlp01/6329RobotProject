@@ -13,6 +13,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.lib.Conversions;
 
@@ -21,11 +24,16 @@ public class ArmIOFalcon implements ArmIO {
   // Motor
   private final TalonFX armMotor = new TalonFX(22, "Canbus");
 
+  private final SingleJointedArmSim sim =
+      new SingleJointedArmSim(DCMotor.getKrakenX60(1), 1, 0.1, 0.5, -1, 200, false, 0);
+  private final PIDController pid = new PIDController(0.1, 0, 0);
   // Status signals
   private final StatusSignal<Double> armPosition = armMotor.getPosition();
   private final StatusSignal<Double> armVolts = armMotor.getMotorVoltage();
-  private double angle = 0;
   //
+
+  private double armVoltage;
+
   private final PositionTorqueCurrentFOC positionControl =
       new PositionTorqueCurrentFOC(0.0).withUpdateFreqHz(0.0);
 
@@ -43,12 +51,8 @@ public class ArmIOFalcon implements ArmIO {
     config.Slot0.kI = 0;
     config.Slot0.kD = 0.1;
 
-    config.Slot0.kS = 0;
-    config.Slot0.kV = 0;
-    config.Slot0.kA = 0;
-
     config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    config.Feedback.FeedbackRotorOffset = 0.1;
+    config.Feedback.FeedbackRotorOffset = 0.0;
     config.Feedback.RotorToSensorRatio = 1.0;
     config.Feedback.SensorToMechanismRatio = 1.0;
 
@@ -58,8 +62,8 @@ public class ArmIOFalcon implements ArmIO {
     config.CurrentLimits.SupplyCurrentLimit = 40;
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    config.MotionMagic.MotionMagicCruiseVelocity = 100;
-    config.MotionMagic.MotionMagicAcceleration = 100;
+    config.MotionMagic.MotionMagicCruiseVelocity = 300;
+    config.MotionMagic.MotionMagicAcceleration = 300;
 
     config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
@@ -80,17 +84,16 @@ public class ArmIOFalcon implements ArmIO {
 
   @Override
   public void setArmAngle(double targetAngle) {
-    angle = targetAngle;
     armMotor.setControl(
         new MotionMagicVoltage(Conversions.degreesToRotations(targetAngle, ArmConstants.kGearRatio))
             .withSlot(0));
   }
 
   @Override
-  public void setArmAngle2(double targetAngle, double feedforward) {
+  public void setArmAngle2(double targetAngle2, double feedforward) {
     armMotor.setControl(
         positionControl
-            .withPosition(Conversions.degreesToRotations(targetAngle, ArmConstants.kGearRatio))
+            .withPosition(Conversions.degreesToRotations(targetAngle2, ArmConstants.kGearRatio))
             .withFeedForward(feedforward));
   }
 

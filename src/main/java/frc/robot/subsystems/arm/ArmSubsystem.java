@@ -34,9 +34,9 @@ public class ArmSubsystem extends SubsystemBase {
     io.setVoltage(voltage);
   }
 
-  public void setArmAngle2(double targetAngle, double ff) {
+  public void setArmAngle2(double targetAngle2, double ff) {
     io.setArmAngle2(
-        targetAngle, ArmConstants.ff.calculate(targetAngle, ArmConstants.velocitySetpoint));
+        targetAngle2, ArmConstants.ff.calculate(targetAngle2, ArmConstants.velocitySetpoint));
   }
 
   public void setArmAngle(double targetAngle) {
