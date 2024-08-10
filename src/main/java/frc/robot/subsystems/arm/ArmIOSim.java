@@ -7,11 +7,9 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -50,12 +48,12 @@ public class ArmIOSim implements ArmIO {
 
   private double volts = 0.0;
 
-  private final Pose3d pivotPosition = new Pose3d(0.1,0.1,0.1, new Rotation3d(0, 0, 0));
+  private  Pose3d pivotPosition = new Pose3d(0.0, 0.05, 0.63, new Rotation3d(Math.toRadians(-120), 0, 0));
 
   //
-   StructPublisher<Pose3d> publisher = NetworkTableInstance.getDefault()
-    .getStructTopic("MyPose", Pose3d.struct).publish();
-   
+  StructPublisher<Pose3d> publisher =
+      NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose3d.struct).publish();
+
   @Override
   public void updateInputs(ArmIOInputs inputs) {
     sim.update(0.02);

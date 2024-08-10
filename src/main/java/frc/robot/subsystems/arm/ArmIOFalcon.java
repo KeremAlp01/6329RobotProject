@@ -34,8 +34,6 @@ public class ArmIOFalcon implements ArmIO {
 
   private double armVoltage;
 
-  private final PositionTorqueCurrentFOC positionControl =
-      new PositionTorqueCurrentFOC(0.0).withUpdateFreqHz(0.0);
 
   public ArmIOFalcon() {
     configArmTalonFX(armMotor);
@@ -89,13 +87,6 @@ public class ArmIOFalcon implements ArmIO {
             .withSlot(0));
   }
 
-  @Override
-  public void setArmAngle2(double targetAngle2, double feedforward) {
-    armMotor.setControl(
-        positionControl
-            .withPosition(Conversions.degreesToRotations(targetAngle2, ArmConstants.kGearRatio))
-            .withFeedForward(feedforward));
-  }
 
   @Override
   public void setVoltage(double votlage) {
