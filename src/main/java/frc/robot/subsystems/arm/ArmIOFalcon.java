@@ -8,12 +8,12 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.ArmConstants;
@@ -33,7 +33,6 @@ public class ArmIOFalcon implements ArmIO {
   //
 
   private double armVoltage;
-
 
   public ArmIOFalcon() {
     configArmTalonFX(armMotor);
@@ -87,7 +86,6 @@ public class ArmIOFalcon implements ArmIO {
             .withSlot(0));
   }
 
-
   @Override
   public void setVoltage(double votlage) {
     armMotor.setVoltage(votlage);
@@ -96,5 +94,10 @@ public class ArmIOFalcon implements ArmIO {
   @Override
   public void stopArm() {
     armMotor.stopMotor();
+  }
+
+  @Override
+  public Rotation3d getArmAngle() {
+    return new Rotation3d(armMotor.getPosition().getValue(), 0, 0);
   }
 }

@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Auto;
-import frc.robot.commands.CloseLoop.setArmAngle;
+import frc.robot.commands.CloseLoop.SetArmAngle;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.OpenLoop.ArmOpenLoopCommand;
 import frc.robot.commands.OpenLoop.FeederOpenLoopCommand;
@@ -178,10 +178,11 @@ public class RobotContainer {
     controller.b().whileTrue(new ShooterOpenLoopCommand(shooter, 4));
     // controller.b().onTrue(Commands.runOnce(() ->drive.setPose(new
     // Pose2d(drive.getPose().getTranslation(), new Rotation2d())),drive).ignoringDisable(true));
-    controller.x().whileTrue(new ArmOpenLoopCommand(arm, 4));
+    controller.a().whileTrue(new ArmOpenLoopCommand(arm, 4));
     controller.y().whileTrue(new IntakeOpenLoopCommand(intake, 5));
     controller.rightBumper().whileTrue(new FeederOpenLoopCommand(feeder, 6));
-    controller.leftBumper().onTrue(new setArmAngle(arm, 100));
+    controller.leftBumper().onTrue(new SetArmAngle(arm, 100));
+    controller.x().onTrue(new SetArmAngle(arm, 54));
     // controller.a().whileTrue(new FlywheelCommand(() -> flywheelSpeedInput.get(), flywheel));
 
   }

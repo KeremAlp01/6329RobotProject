@@ -8,14 +8,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
 
-public class setShooterRPM extends Command {
+public class SetShooterRPM extends Command {
   private final Shooter mShooter;
-  private final double leftRPM;
   private final double rightRPM;
+  private final double leftRPM;
   private final boolean shouldStop;
-
+  
   /** Creates a new setAShooterRPm. */
-  public setShooterRPM(Shooter mShooter, double leftRPM, double rightRPM, boolean shouldStop) {
+  public SetShooterRPM(Shooter mShooter, double leftRPM, double rightRPM, boolean shouldStop) {
     this.mShooter = mShooter;
     this.leftRPM = leftRPM;
     this.rightRPM = rightRPM;

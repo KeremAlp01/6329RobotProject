@@ -7,11 +7,11 @@ package frc.robot.commands.CloseLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.arm.ArmSubsystem;
 
-public class setArmAngle extends Command {
+public class SetArmAngle extends Command {
   private final ArmSubsystem arm;
   private final double targetAngle;
   /** Creates a new setArmAngle. */
-  public setArmAngle(ArmSubsystem arm, double targetAngle) {
+  public SetArmAngle(ArmSubsystem arm, double targetAngle) {
     this.arm = arm;
     this.targetAngle = targetAngle;
     addRequirements(arm);
@@ -37,6 +37,6 @@ public class setArmAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(arm.getPosition() - targetAngle) <= 1.0;
+    return Math.abs(arm.getPosition() - targetAngle) <= 0.5;
   }
 }

@@ -5,12 +5,9 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -29,7 +26,7 @@ public class ArmIOSim implements ArmIO {
           1,
           0,
           180 * Math.PI / 180,
-          true,
+          false,
           0);
   private PIDController pid = new PIDController(0.2, 0.0, 0.0);
 
@@ -48,20 +45,12 @@ public class ArmIOSim implements ArmIO {
 
   private double volts = 0.0;
 
-  private  Pose3d pivotPosition = new Pose3d(0.0, 0.05, 0.63, new Rotation3d(Math.toRadians(-120), 0, 0));
-
-  //
-  StructPublisher<Pose3d> publisher =
-      NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose3d.struct).publish();
-
   @Override
   public void updateInputs(ArmIOInputs inputs) {
     sim.update(0.02);
     inputs.armPosition = Math.toDegrees(sim.getAngleRads());
     m_arm.setAngle(Math.toDegrees(sim.getAngleRads()));
     SmartDashboard.putData("Arm Sim", m_mech2d);
-
-    publisher.set(pivotPosition);
   }
 
   @Override
@@ -73,6 +62,11 @@ public class ArmIOSim implements ArmIO {
   @Override
   public void setVoltage(double voltage) {
     sim.setInputVoltage(voltage);
+  }
+
+  @Override
+  public Rotation3d getArmAngle() {
+    return new Rotation3d(-(sim.getAngleRads() - Math.toRadians(28)), 0, 0);
   }
 
   @Override

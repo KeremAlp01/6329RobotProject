@@ -25,6 +25,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -262,6 +263,11 @@ public class Drive extends SubsystemBase {
   @AutoLogOutput(key = "Odometry/Robot")
   public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
+  }
+
+  @AutoLogOutput(key = "Odometry/Robot3d")
+  public Pose3d getPose3d() {
+    return new Pose3d(poseEstimator.getEstimatedPosition());
   }
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
