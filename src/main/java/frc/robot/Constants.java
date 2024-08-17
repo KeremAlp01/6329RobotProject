@@ -14,6 +14,9 @@
 package frc.robot;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import frc.robot.lib.util.InterpolatingDouble;
+import frc.robot.lib.util.InterpolatingTreeMap;
+import frc.robot.lib.util.ShootingParameters;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -53,4 +56,42 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static double[][] kRPMValues = {
+    {6.7, 1084},
+    {5.5, 990},
+    {4.5, 900},
+    {3.5, 813},
+    {2.5, 770},
+    {2, 730},
+    {1.5, 740},
+  };
+
+  public static double[][] kPivotValues = {
+    {6.7, 25},
+    {5.5, 21.66},
+    {4.5, 19.2},
+    {3.5, 12},
+    {2.5, 7},
+    {2, 4.5},
+    {1.5, 0}
+  };
+
+  public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kPivotMap =
+      new InterpolatingTreeMap<>();
+  public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRPMMap =
+      new InterpolatingTreeMap<>();
+
+  static {
+    for (double[] pair : kRPMValues) {
+      kRPMMap.put(new InterpolatingDouble(pair[0]), new InterpolatingDouble(pair[1]));
+    }
+
+    for (double[] pair : kPivotValues) {
+      kPivotMap.put(new InterpolatingDouble(pair[0]), new InterpolatingDouble(pair[1]));
+    }
+  }
+
+  public static final ShootingParameters kShootingParams =
+      new ShootingParameters(kPivotMap, kRPMMap, 300, 0.5);
 }

@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Rotation3d;
 
 /** Add your docs here. */
 public class ShooterIOKraken implements ShooterIO {
@@ -21,6 +22,9 @@ public class ShooterIOKraken implements ShooterIO {
   private final StatusSignal<Double> rightRPM = shooter2.getVelocity();
   private final StatusSignal<Double> leftVoltage = shooter1.getMotorVoltage();
   private final StatusSignal<Double> rightVoltage = shooter2.getMotorVoltage();
+
+  private double leftTargetRPM = 0.0;
+  private double rightTargetRPM = 0.0;
 
   public ShooterIOKraken() {
     configShooterTalonFX(shooter1);
@@ -75,8 +79,31 @@ public class ShooterIOKraken implements ShooterIO {
   }
 
   @Override
+  public double getLeftRPM() {
+    return shooter2.getVelocity().getValueAsDouble();
+  }
+
+  @Override
+  public double getRightRPM() {
+    return shooter1.getVelocity().getValueAsDouble();
+  }
+
+  @Override
   public void setTargetRPM(double leftRPM, double rightRPM) {
+    leftTargetRPM = leftRPM;
+    rightTargetRPM = rightRPM;
     shooter2.setControl(new VelocityVoltage(leftRPM / 60).withSlot(0));
     shooter1.setControl(new VelocityVoltage(rightRPM / 60).withSlot(0));
   }
+
+  @Override
+  public double getLeftTargetRPM(){
+    return leftTargetRPM;
+  }
+
+  @Override
+  public double getRightTargetRPM(){
+    return rightTargetRPM;
+  }
+
 }

@@ -24,6 +24,10 @@ public interface ArmIO {
     return new Rotation3d();
   }
 
+  public default double getTargetAngle(){
+    return Double.NaN;
+  }
+
   public default void stopArm() {}
 
   public default void updateInputs(ArmIOInputs inputs) {}

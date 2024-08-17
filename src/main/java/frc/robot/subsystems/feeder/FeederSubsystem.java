@@ -4,12 +4,16 @@
 
 package frc.robot.subsystems.feeder;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class FeederSubsystem extends SubsystemBase {
   private final FeederIO io;
   private final FeederIOInputsAutoLogged inputs = new FeederIOInputsAutoLogged();
+
+  private final DigitalInput digitalInput = new DigitalInput(0);
+
   /** Creates a new feederSubsystem. */
   public enum feederState {
     IDLE,
@@ -22,6 +26,10 @@ public class FeederSubsystem extends SubsystemBase {
 
   public void setVoltage(double voltage) {
     io.setVoltage(voltage);
+  }
+
+  public boolean getFeederSensorValue(){
+    return digitalInput.get();
   }
 
   @Override

@@ -57,6 +57,10 @@ public class ArmSubsystem extends SubsystemBase {
     return io.getArmAngle();
   }
 
+  public double getTargetAngle(){
+    return io.getTargetAngle();
+  }
+  
   public double getPosition() {
     return inputs.armPosition;
   }

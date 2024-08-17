@@ -34,6 +34,8 @@ public class ArmIOFalcon implements ArmIO {
 
   private double armVoltage;
 
+  private double targetAngle = 0.0;
+
   public ArmIOFalcon() {
     configArmTalonFX(armMotor);
     BaseStatusSignal.setUpdateFrequencyForAll(50.0, armPosition, armVolts);
@@ -80,9 +82,10 @@ public class ArmIOFalcon implements ArmIO {
   }
 
   @Override
-  public void setArmAngle(double targetAngle) {
+  public void setArmAngle(double angle) {
+    targetAngle = angle;
     armMotor.setControl(
-        new MotionMagicVoltage(Conversions.degreesToRotations(targetAngle, ArmConstants.kGearRatio))
+        new MotionMagicVoltage(Conversions.degreesToRotations(angle, ArmConstants.kGearRatio))
             .withSlot(0));
   }
 
@@ -99,5 +102,10 @@ public class ArmIOFalcon implements ArmIO {
   @Override
   public Rotation3d getArmAngle() {
     return new Rotation3d(armMotor.getPosition().getValue(), 0, 0);
+  }
+
+  @Override
+  public double getTargetAngle(){
+    return targetAngle;
   }
 }

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -42,6 +43,22 @@ public class Shooter extends SubsystemBase {
     return shooterState;
   }
 
+  public double getLeftRPM() {
+    return io.getLeftRPM();
+  }
+
+  public double getRightRPM() {
+    return io.getRightRPM();
+  }
+
+  public double getLeftTargetRPM(){
+    return io.getLeftTargetRPM();
+  }
+
+  public double getRightTargetRPM(){
+    return io.getRightTargetRPM();
+  }
+
   @Override
   public void periodic() {
     io.updateInputs(inputs);
@@ -51,4 +68,6 @@ public class Shooter extends SubsystemBase {
 
     // This method will be called once per scheduler run
   }
+
+  
 }

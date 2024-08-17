@@ -44,6 +44,8 @@ public class ArmIOSim implements ArmIO {
               new Color8Bit(Color.kYellow)));
 
   private double volts = 0.0;
+  private double targetAngle = 0.0;
+
 
   @Override
   public void updateInputs(ArmIOInputs inputs) {
@@ -55,6 +57,7 @@ public class ArmIOSim implements ArmIO {
 
   @Override
   public void setArmAngle(double angle) {
+    targetAngle = angle;
     volts = pid.calculate(Math.toDegrees(sim.getAngleRads()), angle);
     sim.setInputVoltage(volts);
   }
@@ -67,6 +70,11 @@ public class ArmIOSim implements ArmIO {
   @Override
   public Rotation3d getArmAngle() {
     return new Rotation3d(-(sim.getAngleRads() - Math.toRadians(28)), 0, 0);
+  }
+
+  @Override
+  public double getTargetAngle(){
+    return targetAngle;
   }
 
   @Override

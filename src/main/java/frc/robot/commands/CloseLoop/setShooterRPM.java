@@ -13,7 +13,7 @@ public class SetShooterRPM extends Command {
   private final double rightRPM;
   private final double leftRPM;
   private final boolean shouldStop;
-  
+
   /** Creates a new setAShooterRPm. */
   public SetShooterRPM(Shooter mShooter, double leftRPM, double rightRPM, boolean shouldStop) {
     this.mShooter = mShooter;
@@ -34,6 +34,7 @@ public class SetShooterRPM extends Command {
   @Override
   public void execute() {
     mShooter.setTargetRPM(leftRPM, rightRPM);
+    mShooter.setShooterState(ShooterState.TARGETRPM);
   }
 
   // Called once the command ends or is interrupted.
