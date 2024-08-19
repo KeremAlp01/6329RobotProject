@@ -4,9 +4,10 @@
 
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -21,18 +22,33 @@ public class Shooter extends SubsystemBase {
   }
 
   public static ShooterState shooterState = ShooterState.IDLE;
+  private final SimpleMotorFeedforward ffModel;
 
   /** Creates a new ShooterSubsystem. */
   public Shooter(ShooterIO io) {
     this.io = io;
+
+    switch (Constants.currentMode) {
+      case REAL:
+      case REPLAY:
+        ffModel = new SimpleMotorFeedforward(0.0, 0.00);
+        break;
+      case SIM:
+        ffModel = new SimpleMotorFeedforward(0.0, 0.0016);
+        break;
+      default:
+        ffModel = new SimpleMotorFeedforward(0.0, 0.0);
+        break;
+    }
   }
 
-  public void setVoltage(double rightVoltage, double leftVoltage) {
-    io.setVoltage(rightVoltage, leftVoltage);
+  public void setVoltage(double voltage) {
+    io.setVoltage(voltage);
+    ;
   }
 
   public void setTargetRPM(double leftRPM, double rightRPM) {
-    io.setTargetRPM(leftRPM, rightRPM);
+    io.setTargetRPM(leftRPM, rightRPM, ffModel.calculate(leftRPM));
   }
 
   public void setShooterState(ShooterState state) {
@@ -51,11 +67,11 @@ public class Shooter extends SubsystemBase {
     return io.getRightRPM();
   }
 
-  public double getLeftTargetRPM(){
+  public double getLeftTargetRPM() {
     return io.getLeftTargetRPM();
   }
 
-  public double getRightTargetRPM(){
+  public double getRightTargetRPM() {
     return io.getRightTargetRPM();
   }
 
@@ -68,6 +84,4 @@ public class Shooter extends SubsystemBase {
 
     // This method will be called once per scheduler run
   }
-
-  
 }

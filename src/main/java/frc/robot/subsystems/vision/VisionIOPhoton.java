@@ -5,4 +5,4 @@
 package frc.robot.subsystems.vision;
 
 /** Add your docs here. */
-public class VisionIOPhoton implements VisionIO{}
+public class VisionIOPhoton implements VisionIO {}

@@ -24,11 +24,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Auto;
-import frc.robot.commands.CloseLoop.SetArmAngle;
+import frc.robot.commands.CloseLoop.SetShooterRPM;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.OpenLoop.ArmOpenLoopCommand;
-import frc.robot.commands.OpenLoop.FeederOpenLoopCommand;
-import frc.robot.commands.OpenLoop.IntakeOpenLoopCommand;
 import frc.robot.commands.OpenLoop.ShooterOpenLoopCommand;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOFalcon;
@@ -53,6 +50,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOKraken;
+import frc.robot.subsystems.shooter.ShooterIOSim;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -122,7 +120,7 @@ public class RobotContainer {
                 new ModuleIOSim());
         flywheel = new Flywheel(new FlywheelIOSim());
         intake = new IntakeSubsystem(new IntakeIOFalcon());
-        shooter = new Shooter(new ShooterIOKraken());
+        shooter = new Shooter(new ShooterIOSim());
         arm = new ArmSubsystem(new ArmIOSim());
         feeder = new FeederSubsystem(new FeederIOFalcon());
         break;
@@ -178,11 +176,12 @@ public class RobotContainer {
     controller.b().whileTrue(new ShooterOpenLoopCommand(shooter, 4));
     // controller.b().onTrue(Commands.runOnce(() ->drive.setPose(new
     // Pose2d(drive.getPose().getTranslation(), new Rotation2d())),drive).ignoringDisable(true));
-    controller.a().whileTrue(new ArmOpenLoopCommand(arm, 4));
-    controller.y().whileTrue(new IntakeOpenLoopCommand(intake, 5));
-    controller.rightBumper().whileTrue(new FeederOpenLoopCommand(feeder, 6));
-    controller.leftBumper().onTrue(new SetArmAngle(arm, 100));
-    controller.x().onTrue(new SetArmAngle(arm, 54));
+    // controller.a().whileTrue(new ArmOpenLoopCommand(arm, 4));
+    // controller.y().whileTrue(new IntakeOpenLoopCommand(intake, 5));
+    // controller.rightBumper().whileTrue(new FeederOpenLoopCommand(feeder, 6));
+    // controller.leftBumper().onTrue(new SetArmAngle(arm, 100));
+    // controller.y().onTrue(new SetArmAngle(arm, 54));
+    controller.x().whileTrue(new SetShooterRPM(shooter, 5000, 5000, true));
     // controller.a().whileTrue(new FlywheelCommand(() -> flywheelSpeedInput.get(), flywheel));
 
   }

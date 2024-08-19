@@ -1,7 +1,5 @@
 package frc.robot.lib.util;
 
-import edu.wpi.first.math.geometry.Rotation3d;
-
 public class ShootingParameters {
   private final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> mShooterPivotMap;
   private final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> mShooterRPMMap;
@@ -27,8 +25,7 @@ public class ShootingParameters {
     return mShooterRPMMap;
   }
 
-  public synchronized boolean isShooterAtSetpoint(
-      double d, double e) {
+  public synchronized boolean isShooterAtSetpoint(double d, double e) {
     return Util.epsilonEquals(d, e, mShooterAllowableErrorRPM);
   }
 

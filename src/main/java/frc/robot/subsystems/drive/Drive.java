@@ -55,6 +55,8 @@ public class Drive extends SubsystemBase {
 
   ChoreoTrajectory trajectory = Choreo.getTrajectory("a");
 
+  private double targetHeading = 0.0;
+
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
@@ -272,6 +274,14 @@ public class Drive extends SubsystemBase {
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
     return getPose().getRotation();
+  }
+
+  public double getTargetHeading(){
+    return targetHeading;
+  }
+
+  public void setTargetHeading(double heading){
+    targetHeading = heading;
   }
 
   /** Resets the current odometry pose. */

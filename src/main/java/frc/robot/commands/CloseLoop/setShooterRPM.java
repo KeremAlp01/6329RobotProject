@@ -6,7 +6,6 @@ package frc.robot.commands.CloseLoop;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.Shooter.ShooterState;
 
 public class SetShooterRPM extends Command {
   private final Shooter mShooter;
@@ -26,29 +25,25 @@ public class SetShooterRPM extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    mShooter.setShooterState(ShooterState.SPINNING_UP);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     mShooter.setTargetRPM(leftRPM, rightRPM);
-    mShooter.setShooterState(ShooterState.TARGETRPM);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     if (shouldStop) {
-      mShooter.setVoltage(0, 0);
+      mShooter.setVoltage(0.0);
     }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    mShooter.setShooterState(ShooterState.IDLE);
     return false;
   }
 }

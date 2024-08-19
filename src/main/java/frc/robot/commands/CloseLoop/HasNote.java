@@ -20,19 +20,18 @@ import frc.robot.subsystems.shooter.Shooter;
 public class HasNote extends SequentialCommandGroup {
 
   /** Creates a new HasNote. */
-  public HasNote(FeederSubsystem mFeeder,Shooter mShooter,IntakeSubsystem mIntake,ArmSubsystem mArm) {
-   
+  public HasNote(
+      FeederSubsystem mFeeder, Shooter mShooter, IntakeSubsystem mIntake, ArmSubsystem mArm) {
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new SetArmAngle(mArm, 0),
-    new WaitUntilCommand(mFeeder :: getFeederSensorValue)
-    .raceWith(Commands.parallel(new IntakeOpenLoopCommand(mIntake, 8)
-    ,new FeederOpenLoopCommand(mFeeder,5)))
-    .andThen(new FeederOpenLoopCommand(mFeeder, 3)
-    .withTimeout(0.1))
-    .andThen(new FeederOpenLoopCommand(mFeeder, -2)
-    .withTimeout(0.2))
-    );
+    addCommands(
+        new SetArmAngle(mArm, 0),
+        new WaitUntilCommand(mFeeder::getFeederSensorValue)
+            .raceWith(
+                Commands.parallel(
+                    new IntakeOpenLoopCommand(mIntake, 8), new FeederOpenLoopCommand(mFeeder, 5)))
+            .andThen(new FeederOpenLoopCommand(mFeeder, 3).withTimeout(0.1))
+            .andThen(new FeederOpenLoopCommand(mFeeder, -2).withTimeout(0.2)));
   }
 }

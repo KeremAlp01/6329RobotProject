@@ -13,7 +13,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.ArmConstants;
@@ -32,7 +31,6 @@ public class ArmIOFalcon implements ArmIO {
   private final StatusSignal<Double> armVolts = armMotor.getMotorVoltage();
   //
 
-  private double armVoltage;
 
   private double targetAngle = 0.0;
 
@@ -100,12 +98,12 @@ public class ArmIOFalcon implements ArmIO {
   }
 
   @Override
-  public Rotation3d getArmAngle() {
-    return new Rotation3d(armMotor.getPosition().getValue(), 0, 0);
+  public double getArmAngle() {
+    return armMotor.getPosition().getValue();
   }
 
   @Override
-  public double getTargetAngle(){
+  public double getTargetAngle() {
     return targetAngle;
   }
 }

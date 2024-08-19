@@ -5,7 +5,6 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -46,7 +45,6 @@ public class ArmIOSim implements ArmIO {
   private double volts = 0.0;
   private double targetAngle = 0.0;
 
-
   @Override
   public void updateInputs(ArmIOInputs inputs) {
     sim.update(0.02);
@@ -68,12 +66,12 @@ public class ArmIOSim implements ArmIO {
   }
 
   @Override
-  public Rotation3d getArmAngle() {
-    return new Rotation3d(-(sim.getAngleRads() - Math.toRadians(28)), 0, 0);
+  public double getArmAngle() {
+    return -(sim.getAngleRads() - Math.toRadians(28));
   }
 
   @Override
-  public double getTargetAngle(){
+  public double getTargetAngle() {
     return targetAngle;
   }
 

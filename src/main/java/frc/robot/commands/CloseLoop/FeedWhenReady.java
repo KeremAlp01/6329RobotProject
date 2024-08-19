@@ -32,13 +32,15 @@ public class FeedWhenReady extends Command {
   @Override
   public void execute() {
 
-    if (Constants.kShootingParams.isShooterAtSetpoint(mShooter.getLeftRPM(), mShooter.getLeftTargetRPM())
-      & Constants.kShootingParams.isShooterAtSetpoint(mShooter.getRightRPM(), mShooter.getRightTargetRPM())
-      & Constants.kShootingParams.isShooterPivotAtSetpoint(Math.toDegrees(mArm.getArmAngle().getAngle()), mArm.getTargetAngle())
-      & mFeeder.getFeederSensorValue()) {
+    if (Constants.kShootingParams.isShooterAtSetpoint(
+            mShooter.getLeftRPM(), mShooter.getLeftTargetRPM())
+        & Constants.kShootingParams.isShooterAtSetpoint(
+            mShooter.getRightRPM(), mShooter.getRightTargetRPM())
+        & Constants.kShootingParams.isShooterPivotAtSetpoint(
+            mArm.getArmAngle(), mArm.getTargetAngle())
+        & mFeeder.getFeederSensorValue()) {
       mFeeder.setVoltage(10);
-    }
-    else{
+    } else {
       mFeeder.setVoltage(0);
     }
   }

@@ -25,13 +25,13 @@ public class ShooterOpenLoopCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setVoltage(voltage, voltage);
+    shooter.setVoltage(voltage);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setVoltage(0, 0);
+    shooter.setVoltage(0.0);
   }
 
   // Returns true when the command should end.

@@ -2,7 +2,6 @@
 
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.geometry.Rotation3d;
 import org.littletonrobotics.junction.AutoLog;
 
 /** Add your docs here. */
@@ -20,12 +19,12 @@ public interface ArmIO {
 
   public default void setArmAngle2(double targetAngle2, double feedforward) {}
 
-  public default Rotation3d getArmAngle() {
-    return new Rotation3d();
+  public default double getArmAngle() {
+    return 0;
   }
 
-  public default double getTargetAngle(){
-    return Double.NaN;
+  public default double getTargetAngle() {
+    return 0;
   }
 
   public default void stopArm() {}

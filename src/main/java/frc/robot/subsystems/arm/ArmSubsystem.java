@@ -18,7 +18,6 @@ import org.littletonrobotics.junction.Logger;
 public class ArmSubsystem extends SubsystemBase {
   private final ArmIO io;
   private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
-  private ArmFeedforward ff;
 
   private final Translation3d pivotPosition = new Translation3d(0, 0.05, 0.63);
 
@@ -53,14 +52,14 @@ public class ArmSubsystem extends SubsystemBase {
     io.setArmAngle(targetAngle);
   }
 
-  public Rotation3d getArmAngle() {
+  public double getArmAngle() {
     return io.getArmAngle();
   }
 
-  public double getTargetAngle(){
+  public double getTargetAngle() {
     return io.getTargetAngle();
   }
-  
+
   public double getPosition() {
     return inputs.armPosition;
   }
@@ -73,7 +72,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     Logger.processInputs("Arm", inputs);
 
-    publisher.set(new Pose3d(pivotPosition, io.getArmAngle()));
+    publisher.set(new Pose3d(pivotPosition, new Rotation3d(io.getArmAngle(), 0, 0)));
     // This method will be called once per scheduler run
   }
 }

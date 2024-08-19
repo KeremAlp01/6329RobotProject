@@ -8,9 +8,6 @@ import org.littletonrobotics.junction.AutoLog;
 
 /** Add your docs here. */
 public interface VisionIO {
-    @AutoLog
-    public class VisionIOInputs {
-        
-    }
-
+  @AutoLog
+  public class VisionIOInputs {}
 }

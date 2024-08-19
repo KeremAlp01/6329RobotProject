@@ -28,7 +28,7 @@ public class FeederSubsystem extends SubsystemBase {
     io.setVoltage(voltage);
   }
 
-  public boolean getFeederSensorValue(){
+  public boolean getFeederSensorValue() {
     return digitalInput.get();
   }
 

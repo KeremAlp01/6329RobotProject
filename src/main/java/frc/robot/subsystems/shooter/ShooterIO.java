@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.math.geometry.Rotation3d;
 import org.littletonrobotics.junction.AutoLog;
 
 /** Add your docs here. */
@@ -17,9 +16,9 @@ public interface ShooterIO {
     public double rightRPM;
   }
 
-  public default void setVoltage(double rightVotlage, double leftVoltage) {}
+  public default void setVoltage(double voltage) {}
 
-  public default void setTargetRPM(double leftRPM, double rightRPM) {}
+  public default void setTargetRPM(double leftRPM, double rightRPM, double ffVolts) {}
 
   public default double getLeftRPM() {
     return 0;
@@ -29,13 +28,13 @@ public interface ShooterIO {
     return 0;
   }
 
-  public default double getLeftTargetRPM(){
-    return Double.NaN;
+  public default double getLeftTargetRPM() {
+    return 0;
   }
 
-  public default double getRightTargetRPM(){
-    return Double.NaN;
+  public default double getRightTargetRPM() {
+    return 0;
   }
-  
+
   public default void updateInputs(ShooterIOInputs inputs) {}
 }
