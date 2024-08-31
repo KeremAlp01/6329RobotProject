@@ -19,8 +19,9 @@ public class VisionIOLimelight implements VisionIO {
 
   private final double xyStdDevCoefficient = 0.3;
   private static final String limelight_name = new String("limelight");
-  private static double targetX;
-  private static double targetY;
+  private boolean targetValid = false;
+  private double targetX;
+  private double targetY;
   private static boolean isValid = false;
 
   public VisionIOLimelight() {
@@ -28,10 +29,17 @@ public class VisionIOLimelight implements VisionIO {
   }
 
   @Override
-  public void updateInputs() {
+  public void updateInputs(VisionIOInputs inputs) {
     isValid = LimelightHelpers.getTV("limelight");
     targetX = LimelightHelpers.getTX("limelight");
     targetY = LimelightHelpers.getTY("limelight");
+
+    targetValid =
+        Robot.getAlliance() == Alliance.Red
+            ? LimelightHelpers.getTV(limelight_name)
+                && LimelightHelpers.getFiducialID(limelight_name) == 4
+            : LimelightHelpers.getTV(limelight_name)
+                && LimelightHelpers.getFiducialID(limelight_name) == 7;
 
     LimelightHelpers.setPriorityTagID("limelight", Robot.getAlliance() == Alliance.Red ? 4 : 8);
 
@@ -86,8 +94,8 @@ public class VisionIOLimelight implements VisionIO {
   }
 
   @AutoLogOutput(key = "Limelight/TY")
-  public void getTY() {
-    LimelightHelpers.getTY(limelight_name);
+  public double getTY() {
+    return targetY;
   }
 
   public void getTX() {

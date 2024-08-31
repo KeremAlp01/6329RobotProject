@@ -87,8 +87,8 @@ public class ArmIOFalcon implements ArmIO {
   }
 
   @Override
-  public void setVoltage(double votlage) {
-    armMotor.setVoltage(votlage);
+  public void setVoltage(double voltage) {
+    armMotor.setVoltage(voltage);
   }
 
   @Override

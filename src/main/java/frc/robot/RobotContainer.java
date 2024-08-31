@@ -54,6 +54,9 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOKraken;
 import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.subsystems.vision.VisionIOPhoton;
+import frc.robot.subsystems.vision.VisionSubsystem;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -81,6 +84,7 @@ public class RobotContainer {
   public static Shooter shooter;
   public static ArmSubsystem arm;
   public static FeederSubsystem feeder;
+  public static VisionSubsystem vision;
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
@@ -109,6 +113,7 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIOKraken());
         arm = new ArmSubsystem(new ArmIOFalcon());
         feeder = new FeederSubsystem(new FeederIOFalcon());
+        vision = new VisionSubsystem(new VisionIOLimelight());
 
         break;
 
@@ -126,6 +131,7 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIOSim());
         arm = new ArmSubsystem(new ArmIOSim());
         feeder = new FeederSubsystem(new FeederIOFalcon());
+        vision = new VisionSubsystem(new VisionIOPhoton());
         break;
 
       default:
