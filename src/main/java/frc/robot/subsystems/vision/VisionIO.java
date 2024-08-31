@@ -10,4 +10,6 @@ import org.littletonrobotics.junction.AutoLog;
 public interface VisionIO {
   @AutoLog
   public class VisionIOInputs {}
+
+  public default void updateInputs() {}
 }

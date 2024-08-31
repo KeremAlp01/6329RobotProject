@@ -31,7 +31,6 @@ public class ArmIOFalcon implements ArmIO {
   private final StatusSignal<Double> armVolts = armMotor.getMotorVoltage();
   //
 
-
   private double targetAngle = 0.0;
 
   public ArmIOFalcon() {

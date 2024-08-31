@@ -13,6 +13,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -30,12 +33,16 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
-  private RobotContainer robotContainer;
+  public static RobotContainer robotContainer;
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+  private static Alliance currentAlliance = Alliance.Blue;
+
+  private final SendableChooser<Alliance> m_allianceChooser = new SendableChooser<>();
+
   @Override
   public void robotInit() {
     // Record metadata
@@ -55,6 +62,10 @@ public class Robot extends LoggedRobot {
         Logger.recordMetadata("GitDirty", "Unknown");
         break;
     }
+
+    m_allianceChooser.setDefaultOption("Blue Alliance", Alliance.Blue);
+    m_allianceChooser.addOption("Red Alliance", Alliance.Red);
+    SmartDashboard.putData("Alliance Chooser", m_allianceChooser);
 
     // Set up data receivers & replay source
     switch (Constants.currentMode) {
@@ -97,6 +108,12 @@ public class Robot extends LoggedRobot {
     // finished or interrupted commands, and running subsystem periodic() methods.
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
+
+    if (currentAlliance != m_allianceChooser.getSelected()) {
+      currentAlliance = m_allianceChooser.getSelected();
+    }
+
+    SmartDashboard.putString("Selected Alliance", getAlliance().toString());
     CommandScheduler.getInstance().run();
   }
 
@@ -153,6 +170,10 @@ public class Robot extends LoggedRobot {
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {}
+
+  public static Alliance getAlliance() {
+    return currentAlliance;
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override

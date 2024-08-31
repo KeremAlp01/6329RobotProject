@@ -22,10 +22,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Auto;
+import frc.robot.commands.CloseLoop.SetArmAngle;
 import frc.robot.commands.CloseLoop.SetShooterRPM;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.OpenLoop.FeederOpenLoopCommand;
 import frc.robot.commands.OpenLoop.ShooterOpenLoopCommand;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOFalcon;
@@ -72,15 +75,15 @@ public class RobotContainer {
 
   private final Map<String, ChoreoTrajectory> trajMap;
   // Subsystems
-  private final Drive drive;
-  private final Flywheel flywheel;
-  private final IntakeSubsystem intake;
-  private final Shooter shooter;
-  private final ArmSubsystem arm;
-  private final FeederSubsystem feeder;
+  public static Drive drive;
+  public static Flywheel flywheel;
+  public static IntakeSubsystem intake;
+  public static Shooter shooter;
+  public static ArmSubsystem arm;
+  public static FeederSubsystem feeder;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  public static final CommandXboxController controller = new CommandXboxController(0);
   private final LoggedDashboardChooser<Command> autoChooser;
   private final SendableChooser<Command> autoChoose = new SendableChooser<Command>();
 
@@ -182,6 +185,21 @@ public class RobotContainer {
     // controller.leftBumper().onTrue(new SetArmAngle(arm, 100));
     // controller.y().onTrue(new SetArmAngle(arm, 54));
     controller.x().whileTrue(new SetShooterRPM(shooter, 5000, 5000, true));
+
+    controller
+        .a()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  drive.setWantsHeadingLock(true);
+                }))
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      drive.setTargetHeading(120);
+                    })
+                .andThen(new SetArmAngle(arm, 90)));
+
     // controller.a().whileTrue(new FlywheelCommand(() -> flywheelSpeedInput.get(), flywheel));
 
   }
@@ -221,6 +239,36 @@ public class RobotContainer {
           .map(Path::getFileName)
           .map(Path::toString)
           .collect(Collectors.toSet());
+    }
+  }
+
+  public Command getAmpShot() {
+    return new SetArmAngle(arm, 80)
+        .andThen(new FeederOpenLoopCommand(feeder, 3))
+        .alongWith(new ShooterOpenLoopCommand(shooter, -4));
+  }
+
+  public Command getSpeakerShot() {
+    return null;
+  }
+
+  public void setAutoHeading() {
+    if (controller.getRawAxis(0) > 0 || controller.getRawAxis(0) < 0) {
+      drive.setWantsHeadingLock(false);
+    } else {
+      drive.setWantsHeadingLock(true);
+      drive.setTargetHeading(drive.getYaw());
+    }
+  }
+
+  public boolean wantsKeepHeading() {
+    if (controller.getRawAxis(4) > 0 || controller.getRawAxis(4) < 0) {
+      drive.setWantsHeadingLock(false);
+      return true;
+    } else {
+      drive.setWantsHeadingLock(true);
+      drive.setTargetHeading(drive.getRawGyro());
+      return false;
     }
   }
 }

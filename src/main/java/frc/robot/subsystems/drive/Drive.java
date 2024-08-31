@@ -17,11 +17,13 @@ import static edu.wpi.first.units.Units.*;
 
 import com.choreo.lib.Choreo;
 import com.choreo.lib.ChoreoTrajectory;
+import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -33,6 +35,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -42,6 +45,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.lib.util.LocalADStarAK;
+import frc.robot.lib.util.swerve.SwerveModule.DriveRequestType;
+import frc.robot.lib.util.swerve.SwerveRequest;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -56,6 +61,9 @@ public class Drive extends SubsystemBase {
   ChoreoTrajectory trajectory = Choreo.getTrajectory("a");
 
   private double targetHeading = 0.0;
+  private double speakerAngle = 0.0;
+  private boolean wantsHeadingLock = false;
+  private static final PIDController headingLockController = new PIDController(0.03, 0.0, 0.001);
 
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
@@ -71,6 +79,12 @@ public class Drive extends SubsystemBase {
         new SwerveModulePosition(),
         new SwerveModulePosition()
       };
+
+  // Heading Lock
+  public final SwerveRequest.FieldCentricFacingAngle fieldCentricHeadingLockRequest =
+      new SwerveRequest.FieldCentricFacingAngle()
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
@@ -85,6 +99,10 @@ public class Drive extends SubsystemBase {
     modules[1] = new Module(frModuleIO, 1);
     modules[2] = new Module(blModuleIO, 2);
     modules[3] = new Module(brModuleIO, 3);
+
+    fieldCentricHeadingLockRequest.HeadingController = new PhoenixPIDController(0.1, 0, 0.1);
+    fieldCentricHeadingLockRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
+    fieldCentricHeadingLockRequest.HeadingController.setTolerance(Math.PI / 180.0);
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configureHolonomic(
@@ -170,6 +188,10 @@ public class Drive extends SubsystemBase {
 
     // Apply odometry update
     poseEstimator.update(rawGyroRotation, modulePositions);
+
+    speakerAngle =
+        poseEstimator.getEstimatedPosition().getRotation().getDegrees()
+            - 10; // Roıbot container limelight
   }
 
   /**
@@ -271,17 +293,48 @@ public class Drive extends SubsystemBase {
   public Pose3d getPose3d() {
     return new Pose3d(poseEstimator.getEstimatedPosition());
   }
+
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
     return getPose().getRotation();
   }
 
-  public double getTargetHeading(){
+  @AutoLogOutput(key = "getTargetheading")
+  public double getTargetHeading() {
     return targetHeading;
   }
 
-  public void setTargetHeading(double heading){
+  public void setTargetHeading(double heading) {
     targetHeading = heading;
+  }
+
+  @AutoLogOutput(key = "getWantsHeadingLock")
+  public boolean getWantsHeadingLock() {
+    return wantsHeadingLock;
+  }
+
+  public void setWantsHeadingLock(boolean newWantsHeadingLock) {
+    wantsHeadingLock = newWantsHeadingLock;
+  }
+
+  public double getSpeakerAngle() {
+    return speakerAngle;
+  }
+
+  public PIDController getHeadingLockController() {
+    return headingLockController;
+  }
+
+  public ChassisSpeeds getCurrentChassisSpeeds() {
+    return kinematics.toChassisSpeeds(getModuleStates());
+  }
+
+  public double getYaw() {
+    return gyroIO.getRotation().getDegrees();
+  }
+
+  public double getRawGyro() {
+    return rawGyroRotation.getDegrees();
   }
 
   /** Resets the current odometry pose. */
@@ -294,8 +347,9 @@ public class Drive extends SubsystemBase {
    *
    * @param visionPose The pose of the robot as measured by the vision camera.
    * @param timestamp The timestamp of the vision measurement in seconds.
+   * @param vector
    */
-  public void addVisionMeasurement(Pose2d visionPose, double timestamp) {
+  public void addVisionMeasurement(Pose2d visionPose, double timestamp, Vector<N3> vector) {
     poseEstimator.addVisionMeasurement(visionPose, timestamp);
   }
 

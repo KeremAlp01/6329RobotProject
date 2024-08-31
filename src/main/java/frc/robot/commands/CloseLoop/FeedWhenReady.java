@@ -7,6 +7,7 @@ package frc.robot.commands.CloseLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.shooter.Shooter;
 
@@ -14,11 +15,13 @@ public class FeedWhenReady extends Command {
   private final Shooter mShooter;
   private final ArmSubsystem mArm;
   private final FeederSubsystem mFeeder;
+  private final Drive mDrive;
   /** Creates a new FeedWhenRead. */
-  public FeedWhenReady(Shooter mShooter, ArmSubsystem mArm, FeederSubsystem mFeeder) {
+  public FeedWhenReady(Shooter mShooter, ArmSubsystem mArm, FeederSubsystem mFeeder, Drive mDrive) {
     this.mShooter = mShooter;
     this.mArm = mArm;
     this.mFeeder = mFeeder;
+    this.mDrive = mDrive;
 
     addRequirements(mFeeder);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -31,6 +34,7 @@ public class FeedWhenReady extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    boolean isHeadingTarget = mDrive.fieldCentricHeadingLockRequest.HeadingController.atSetpoint();
 
     if (Constants.kShootingParams.isShooterAtSetpoint(
             mShooter.getLeftRPM(), mShooter.getLeftTargetRPM())
@@ -38,9 +42,13 @@ public class FeedWhenReady extends Command {
             mShooter.getRightRPM(), mShooter.getRightTargetRPM())
         & Constants.kShootingParams.isShooterPivotAtSetpoint(
             mArm.getArmAngle(), mArm.getTargetAngle())
-        & mFeeder.getFeederSensorValue()) {
+        & mFeeder.getFeederSensorValue()
+        & isHeadingTarget == true) {
+
       mFeeder.setVoltage(10);
+
     } else {
+
       mFeeder.setVoltage(0);
     }
   }
