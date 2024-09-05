@@ -5,30 +5,73 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class VisionSubsystem extends SubsystemBase {
   private final VisionIO io;
-  private final VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
+  private VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
+  private final PoseAndTimestamp results = new PoseAndTimestamp(new Pose2d(), 0);
   /** Creates a new VisionSubsystem. */
-  public VisionSubsystem(VisionIO io) {
+public VisionSubsystem(VisionIO io) {
     this.io = io;
+    inputs = new VisionIOInputsAutoLogged();
   }
 
   @Override
   public void periodic() {
     Logger.processInputs("Vision", inputs);
     io.updateInputs(inputs);
+
+    // if(inputs.allowEstimation){
+    // drive.addVisionMeasurement(inputs.estimatedPose, inputs.timestamp);
+    // }
+    // This method will be called once per scheduler run
+    if (inputs.hasTargets && inputs.isNew && !DriverStation.isAutonomous()) {
+      processVision();
+    }
   }
 
-  public double getTY() {
+  public double getTY(){
     return io.getTY();
+  }
+
+  public void processVision() {
+    // create a new pose based off the new inputs
+    Pose2d currentPose = new Pose2d(inputs.x, inputs.y, new Rotation2d(inputs.rotation));
+    Logger.getInstance().recordOutput(" pose", currentPose);
+
+    // add the new pose to a list
+    new PoseAndTimestamp(currentPose, inputs.timestamp);
   }
 
   public void setReferencePose(Pose2d pose) {
     io.setReferencePose(pose);
   }
 
-  public void updateInputs() {}
+  public PoseAndTimestamp getPoseAndTimestamp() {
+    return results;
+  }
+
+  public static class PoseAndTimestamp {
+    Pose2d pose;
+    double timestamp;
+
+    public PoseAndTimestamp(Pose2d pose, double timestamp) {
+      this.pose = pose;
+      this.timestamp = timestamp;
+    }
+
+    public Pose2d getPose() {
+      return pose;
+    }
+
+    public double getTimestamp() {
+      return timestamp;
+    }
+  }
+
+  
 }
