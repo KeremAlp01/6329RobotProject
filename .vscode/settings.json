@@ -37,5 +37,6 @@
   },
   "[java]": {
     "editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"
-  }
+  },
+  "C_Cpp.errorSquiggles": "disabled"
 }

@@ -395,7 +395,7 @@ public class PhotonPoseEstimator {
 
     private Optional<EstimatedRobotPose> multiTagOnCoprocStrategy(PhotonPipelineResult result) {
         if (result.getMultiTagResult().isPresent()) {
-            var best_tf = result.getMultiTagResult().get().estimatedPose.best;
+            Transform3d best_tf = result.getMultiTagResult().get().estimatedPose.best;
             var best =
                     new Pose3d()
                             .plus(best_tf) // field-to-camera
