@@ -35,6 +35,7 @@ import frc.robot.subsystems.arm.ArmIOFalcon;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.Drive.DriveState;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
@@ -197,6 +198,11 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
+                  drive.setDriveState(DriveState.HEADINGLOCK);
+                }))
+        .onTrue(
+            new InstantCommand(
+                () -> {
                   drive.setWantsHeadingLock(true);
                 }))
         .onTrue(
@@ -204,7 +210,12 @@ public class RobotContainer {
                     () -> {
                       drive.setTargetHeading(120);
                     })
-                .andThen(new SetArmAngle(arm, 90)));
+                .andThen(new SetArmAngle(arm, 90)))
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  drive.setDriveState(DriveState.TELEOP);
+                }));
 
     // controller.a().whileTrue(new FlywheelCommand(() -> flywheelSpeedInput.get(), flywheel));
 
