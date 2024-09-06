@@ -41,7 +41,7 @@ public class EstimatedRobotPose {
     public final List<PhotonTrackedTarget> targetsUsed;
 
     /** The strategy actually used to produce this pose */
-    public final PoseStrategy strategy;
+    public final frc.robot.lib.util.photon.PhotonPoseEstimator.PoseStrategy strategy;
 
     /**
      * Constructs an EstimatedRobotPose
@@ -53,10 +53,10 @@ public class EstimatedRobotPose {
             Pose3d estimatedPose,
             double timestampSeconds,
             List<PhotonTrackedTarget> targetsUsed,
-            PoseStrategy multiTagPnpOnCoprocessor) {
+            frc.robot.lib.util.photon.PhotonPoseEstimator.PoseStrategy closestToReferencePose) {
         this.estimatedPose = estimatedPose;
         this.timestampSeconds = timestampSeconds;
         this.targetsUsed = targetsUsed;
-        this.strategy = multiTagPnpOnCoprocessor;
+        this.strategy = closestToReferencePose;
     }
 }

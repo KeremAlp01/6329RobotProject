@@ -57,6 +57,7 @@ import org.photonvision.estimation.VisionEstimation;
 import org.photonvision.targeting.MultiTargetPNPResult;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.PnpResult;
 
 /**
  * A handle for simulating {@link PhotonCamera} values. Processing simulated targets through this
@@ -405,7 +406,7 @@ public class PhotonCameraSim implements AutoCloseable {
             // save visible targets for raw video stream simulation
             visibleTgts.add(new Pair<>(tgt, imagePoints));
             // estimate pixel noise
-            var noisyTargetCorners = prop.estPixelNoise(imagePoints);
+            Point[] noisyTargetCorners = prop.estPixelNoise(imagePoints);
             // find the minimum area rectangle of target corners
             var minAreaRect = OpenCVHelp.getMinAreaRect(noisyTargetCorners);
             Point[] minAreaRectPts = new Point[4];

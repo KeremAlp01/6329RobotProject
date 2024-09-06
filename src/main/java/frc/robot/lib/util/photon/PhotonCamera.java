@@ -50,6 +50,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.photonvision.PhotonVersion;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.common.networktables.PacketSubscriber;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -192,7 +194,7 @@ public class PhotonCamera implements AutoCloseable {
         // TODO: NT4 timestamps are still not to be trusted. But it's the best we can do until we can
         // make time sync more reliable.
         for (var c : changes) {
-            var result = c.value;
+            PhotonPipelineResult result = c.value;
             result.setReceiveTimestampMicros(c.timestamp);
             ret.add(result);
         }
@@ -215,7 +217,7 @@ public class PhotonCamera implements AutoCloseable {
 
         if (ret.timestamp == 0) return new PhotonPipelineResult();
 
-        var result = ret.value;
+        PhotonPipelineResult result = ret.value;
 
         // Set the timestamp of the result. Since PacketSubscriber doesn't realize that the result
         // contains a thing with time knowledge, set it here.
