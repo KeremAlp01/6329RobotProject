@@ -25,7 +25,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Auto;
+import frc.robot.commands.CloseLoop.FeedWhenReady;
 import frc.robot.commands.CloseLoop.SetArmAngle;
+import frc.robot.commands.CloseLoop.SetArmAngleDistance;
 import frc.robot.commands.CloseLoop.SetShooterRPM;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.OpenLoop.FeederOpenLoopCommand;
@@ -208,7 +210,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      drive.setTargetHeading(120);
+                      drive.setTargetHeading(drive.getSpeakerAngle().getDegrees());
                     })
                 .andThen(new SetArmAngle(arm, 90)))
         .onFalse(
@@ -217,6 +219,14 @@ public class RobotContainer {
                   drive.setDriveState(DriveState.TELEOP);
                 }));
 
+    controller
+        .b()
+        .whileTrue(getSpeakerShot())
+        .whileFalse(
+            new InstantCommand(
+                () -> {
+                  drive.setDriveState(DriveState.TELEOP);
+                }));
     // controller.a().whileTrue(new FlywheelCommand(() -> flywheelSpeedInput.get(), flywheel));
 
   }
@@ -266,7 +276,24 @@ public class RobotContainer {
   }
 
   public Command getSpeakerShot() {
-    return null;
+    return new SetArmAngleDistance(arm, drive)
+        .alongWith(new SetShooterRPM(shooter, 3000, 3000, false))
+        .alongWith(
+            new InstantCommand(
+                () -> {
+                  drive.setDriveState(DriveState.HEADINGLOCK);
+                }))
+        .alongWith(
+            new InstantCommand(
+                () -> {
+                  drive.setWantsHeadingLock(true);
+                }))
+        .alongWith(
+            new InstantCommand(
+                () -> {
+                  drive.setTargetHeading(drive.getSpeakerAngle().getDegrees());
+                }))
+        .alongWith(new FeedWhenReady(shooter, arm, feeder, drive));
   }
 
   public void setAutoHeading() {

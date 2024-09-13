@@ -15,7 +15,7 @@ public class VisionSubsystem extends SubsystemBase {
   private VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
   private final PoseAndTimestamp results = new PoseAndTimestamp(new Pose2d(), 0);
   /** Creates a new VisionSubsystem. */
-public VisionSubsystem(VisionIO io) {
+  public VisionSubsystem(VisionIO io) {
     this.io = io;
     inputs = new VisionIOInputsAutoLogged();
   }
@@ -34,7 +34,7 @@ public VisionSubsystem(VisionIO io) {
     }
   }
 
-  public double getTY(){
+  public double getTY() {
     return io.getTY();
   }
 
@@ -72,6 +72,4 @@ public VisionSubsystem(VisionIO io) {
       return timestamp;
     }
   }
-
-  
 }

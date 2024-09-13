@@ -95,14 +95,13 @@ public class DriveCommands {
                       .calculate(
                           drive.getPose().getRotation().getDegrees(), drive.getTargetHeading());
 
-
-                               double linearMagnitude2 =
+              double linearMagnitude2 =
                   MathUtil.applyDeadband(
                       Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), DEADBAND);
               Rotation2d linearDirection2 =
                   new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
 
-                  Translation2d linearVelocity2 =
+              Translation2d linearVelocity2 =
                   new Pose2d(new Translation2d(), linearDirection2)
                       .transformBy(new Transform2d(linearMagnitude2, 0.0, new Rotation2d()))
                       .getTranslation();
@@ -112,8 +111,8 @@ public class DriveCommands {
                       linearVelocity2.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                       linearVelocity2.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                       omega * drive.getMaxAngularSpeedRadPerSec(),
-                       DriverStation.getAlliance().isPresent()
-                      && DriverStation.getAlliance().get() == Alliance.Red
+                      DriverStation.getAlliance().isPresent()
+                              && DriverStation.getAlliance().get() == Alliance.Red
                           ? drive.getRotation().plus(new Rotation2d(Math.PI))
                           : drive.getRotation()));
               break;

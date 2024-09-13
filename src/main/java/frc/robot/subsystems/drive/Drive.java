@@ -44,6 +44,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.Robot;
 import frc.robot.lib.util.LocalADStarAK;
 import frc.robot.lib.util.swerve.SwerveModule.DriveRequestType;
 import frc.robot.lib.util.swerve.SwerveRequest;
@@ -60,8 +62,9 @@ public class Drive extends SubsystemBase {
 
   ChoreoTrajectory trajectory = Choreo.getTrajectory("a");
 
+  private double distanceToSpeaker = 0.0;
   private double targetHeading = 0.0;
-  private double speakerAngle = 0.0;
+  private Rotation2d speakerAngle = new Rotation2d();
   private boolean wantsHeadingLock = false;
   private static final PIDController headingLockController = new PIDController(0.03, 0.0, 0.001);
 
@@ -197,8 +200,20 @@ public class Drive extends SubsystemBase {
     poseEstimator.update(rawGyroRotation, modulePositions);
 
     speakerAngle =
-        poseEstimator.getEstimatedPosition().getRotation().getDegrees()
-            - 10; // Roıbot container limelight
+        Robot.getAlliance() == Alliance.Blue
+            ? FieldConstants.BlueSpeaker.minus(
+                    poseEstimator.getEstimatedPosition().getTranslation())
+                .getAngle()
+            : FieldConstants.RedSpeaker.minus(poseEstimator.getEstimatedPosition().getTranslation())
+                .getAngle();
+    distanceToSpeaker =
+        poseEstimator
+            .getEstimatedPosition()
+            .getTranslation()
+            .getDistance(
+                Robot.getAlliance() == Alliance.Blue
+                    ? FieldConstants.BlueSpeaker
+                    : FieldConstants.RedSpeaker);
   }
 
   /**
@@ -324,7 +339,7 @@ public class Drive extends SubsystemBase {
     wantsHeadingLock = newWantsHeadingLock;
   }
 
-  public double getSpeakerAngle() {
+  public Rotation2d getSpeakerAngle() {
     return speakerAngle;
   }
 
@@ -342,6 +357,10 @@ public class Drive extends SubsystemBase {
 
   public double getRawGyro() {
     return rawGyroRotation.getDegrees();
+  }
+
+  public double getDistanceToSpeaker() {
+    return distanceToSpeaker;
   }
 
   /** Resets the current odometry pose. */

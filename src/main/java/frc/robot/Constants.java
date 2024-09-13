@@ -14,6 +14,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.lib.util.InterpolatingDouble;
 import frc.robot.lib.util.InterpolatingTreeMap;
 import frc.robot.lib.util.ShootingParameters;
@@ -42,6 +43,11 @@ public final class Constants {
     public static final double velocitySetpoint = 0;
     public static final ArmFeedforward ff =
         new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
+  }
+
+  public static class FieldConstants {
+    public static final Translation2d BlueSpeaker = new Translation2d(0.0, 5.55);
+    public static final Translation2d RedSpeaker = new Translation2d(16.54, 5.55);
   }
 
   public static final Mode currentMode = Mode.SIM;
