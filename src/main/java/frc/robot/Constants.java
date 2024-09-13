@@ -74,34 +74,34 @@ public final class Constants {
   };
 
   public static double[][] kPivotValues = {
-    {6.7, 25},
-    {5.5, 21.66},
-    {4.5, 19.2},
-    {3.5, 12},
-    {2.5, 7},
-    {2, 4.5},
+    {6.7, 200},
+    {5.5, 100},
+    {4.5,80},
+    {3.5, 60},
+    {2.5, 40},
+    {2, 20},
     {1.5, 0}
   };
 
-  public static double[][] kBlueTY = {
-    {6.7, 25},
-    {5.5, 21.66},
-    {4.5, 19.2},
-    {3.5, 12},
-    {2.5, 7},
-    {2, 4.5},
-    {1.5, 0}
-  };
+ // public static double[][] kBlueTY = {
+   // {6.7, 25},
+   // {5.5, 21.66},
+   //7 {4.5, 19.2},
+   // {3.5, 12},
+   // {2.5, 7},
+  //  {2, 4.5},
+   // {1.5, 0}
+ // };
 
-  public static double[][] kRedTY = {
-    {6.7, 25},
-    {5.5, 21.66},
-    {4.5, 19.2},
-    {3.5, 12},
-    {2.5, 7},
-    {2, 4.5},
-    {1.5, 0}
-  };
+  //public static double[][] kRedTY = {
+   // {6.7, 25},
+    //{5.5, 21.66},
+   // {4.5, 19.2},
+   // {3.5, 12},
+  //  {2.5, 7},
+   // {2, 4.5},
+   // {1.5, 0}
+ // };
 
   public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kPivotMap =
       new InterpolatingTreeMap<>();
